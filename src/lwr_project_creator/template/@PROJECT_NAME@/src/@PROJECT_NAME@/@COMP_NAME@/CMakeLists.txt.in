@@ -1,0 +1,103 @@
+cmake_minimum_required(VERSION 2.8)
+
+#The Component Name
+project(@COMP_NAME@)
+
+find_package(RTAI REQUIRED)
+find_package(M3rt REQUIRED)
+find_package(M3 REQUIRED toolbox chains robots hardware robot_ctrl shared_mem)
+find_package(Boost REQUIRED)
+find_package(Eigen3 3 REQUIRED)
+find_package(Protobuf REQUIRED)
+find_package(orocos_kdl REQUIRED)
+
+## Yamlcpp >0.5 support
+find_package(PkgConfig REQUIRED)
+#find_package(YamlCpp  REQUIRED)
+pkg_check_modules(YAMLCPP REQUIRED yaml-cpp)
+if(NOT ${YAMLCPP_VERSION} VERSION_LESS "0.5")
+set_property(
+   DIRECTORY
+   PROPERTY COMPILE_DEFINITIONS YAMLCPP_05
+   )
+endif(NOT ${YAMLCPP_VERSION} VERSION_LESS "0.5")
+
+# Start Protobuf
+# Get all your protofiles
+file(GLOB ProtoFiles "${@PROJECT_NAME_UPPER@_PROTO_DIR}/@PROJECT_NAME@/@COMP_NAME@/*.proto")
+# Import external directories
+SET(PROTOBUF_IMPORT_DIRS ${M3RT_INCLUDE_DIR} ${M3_INCLUDE_DIR})
+# Generate the .pb.cc and .pb.h files
+PROTOBUF_GENERATE_CPP(ProtoSources ProtoHeaders ${CMAKE_CURRENT_BINARY_DIR} ${ProtoFiles})
+# Add a custom target to force the re-generation
+add_custom_target(${PROJECT_NAME}_cpp_protobuf_output  ALL DEPENDS ${ProtoSources})
+## Python protobufs
+find_package(PythonLibs 2.7 REQUIRED)
+find_package(PythonInterp REQUIRED) 
+## Generate and copy the python protobuf
+# Import external directories
+SET(PROTOBUF_IMPORT_DIRS ${M3RT_INCLUDE_DIR} ${M3_INCLUDE_DIR})
+# Generate the .pb.py files
+PROTOBUF_GENERATE_PYTHON(PySources ${@PROJECT_NAME_UPPER@_PYTHON_DIR}/@PROJECT_NAME@/@COMP_NAME@/ ${ProtoFiles}) 
+# Add a custom target to force the re-generation
+add_custom_target(${PROJECT_NAME}_python_protobuf_output ALL DEPENDS ${PySources})
+# End Protobuf 
+
+# We assume that the M3 SDK was installed in /usr/local:
+set(M3_PREFIX /usr/local)
+
+
+# Include dirs to look for
+include_directories(
+    ${M3RT_INCLUDE_DIR}
+    ${RTAI_INCLUDE_DIR}
+    ${EIGEN3_INCLUDE_DIR}
+    ${PROTOBUF_INCLUDE_DIR}
+    ${M3_INCLUDE_DIR}
+    ${KDL_INCLUDE_DIRS}
+    ${YAMLCPP_INCLUDE_DIR}
+    ${orocos_kdl_INCLUDE_DIRS}
+)
+
+
+# Libraries to link against
+SET(LIBS 
+	${YAMLCPP_LIBRARY}
+	${RTAI_LIBRARIES}
+	pthread
+	${Boost_LIBRARIES}
+	${EIGEN3_LIBRARIES}
+	${PROTOBUF_LIBRARIES}
+	${M3RT_LIBRARIES}
+	${M3_LIBRARIES}
+	${orocos_kdl_LIBRARIES}
+)
+
+# Set your srcs here
+FILE(GLOB ALL_SRCS *.cpp)
+
+# Set your headers here (only needed for install)
+#set(ALL_SRCS @FILENAME@.h)
+
+
+# Add the proto-sources to the src list
+list(APPEND ALL_SRCS ${ProtoSources})
+
+# Add the proto-headers to the headers (only needed for install)
+#list(APPEND ALL_HDRS
+#${ProtoHeaders}
+#)
+
+
+# Building
+add_library(${PROJECT_NAME} SHARED ${ALL_SRCS})
+# Linking
+target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+
+
+
+
+
+
+

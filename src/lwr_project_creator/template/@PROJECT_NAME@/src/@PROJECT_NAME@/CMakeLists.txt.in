@@ -1,0 +1,5 @@
+
+
+## Add your project dirs here
+add_subdirectory(@COMP_NAME@)
+

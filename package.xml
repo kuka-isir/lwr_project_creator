@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>lwr_project_creator</name>
+  <version>1.0.0</version>
+  <description>
+    Simple project generator for the KUKA LWR4+ at ISIR
+  </description>
+
+  <maintainer email="hoarau.robotics@gmail.com">Antoine Hoarau</maintainer>
+
+  <license>GPLv2</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+  </export>
+</package>
