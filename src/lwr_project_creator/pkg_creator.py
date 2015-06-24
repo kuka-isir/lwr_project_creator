@@ -130,9 +130,9 @@ class ProcFile:
         if overwrite or (not overwrite and not os.path.isfile(f_out_path)):
             with open(f_out_path,'w') as f :
                 f.write(stream_in)
-            print(f_out_path,'written')
+            print('Created file ' + f_out_path)
         else:
-            print(f_out_path,'already exists, skipping.')
+            print(f_out_path +' already exists, skipping.')
 
     def __create_dir(self,dir_out):
         if not os.path.isdir(dir_out):
@@ -147,7 +147,7 @@ class ProjGenerator():
 
 
         self.template_dir = 'template'
-        self.template_extension = '.in'
+        self.template_extension = ''
 
         self.pfiles=[]
 
@@ -168,7 +168,6 @@ class ProjGenerator():
         files_path_to_open_abs = [f.split(self.template_dir)[1] for f in files_path_to_open]
         files_path_to_write_raw = [self.root_path+f.replace(self.template_extension,'') for f in files_path_to_open_abs]
 
-
         #### Defining the elements to remplace in files
         self.template_elem=[]
         self.template_elem.append(['@PROJECT_PATH@',self.get_project_path()])
@@ -181,8 +180,8 @@ class ProjGenerator():
         ### Defining Multiple elements here
         self.template_elem_multi=[]
         self.template_elem_multi.append(['@CLASS_NAME@' ,self.get_class_name()])
-        self.template_elem_multi.append(['@FILENAME@'   ,self.get_filename()])
-        self.template_elem_multi.append(['@FILENAME_UPPER@',[fn.upper() for fn in self.get_filename()]])
+        self.template_elem_multi.append(['@FILE_NAME@'   ,self.get_filename()])
+        self.template_elem_multi.append(['@FILE_NAME_UPPER@',[fn.upper() for fn in self.get_filename()]])
 
         ## Processing the multiple elements
         files_path_to_write=[]
@@ -354,7 +353,7 @@ class LWRComponentAssistant(gtk.Assistant):
         label = gtk.Label("Project Name :")
         table.attach(label, 0, 1, 1, 2)
         self.entry = gtk.Entry()
-        self.entry.set_text("LWRproject")
+        self.entry.set_text("rtt_lwr_demo")
         table.attach(self.entry, 1, 2, 1, 2)
         self.entry.connect('changed', self.changed_comp_name_cb)
 
@@ -657,7 +656,7 @@ def main(argv):
         | This script helps generate a controller for the KUKA LWR4+ at ISIR.      |
         | Launch this script without arguments to use the GUI.                     |
         |                                                                          |
-        | example : lwr_create_pkg rtt_lwr_jt_controller JTController              |
+        | example : lwr_create_pkg rtt_lwr_jt_controller -c JTController           |
         |                                                                          |
         | Author : Antoine Hoarau <hoarau.robotics@gmail.com                       |
         ----------------------------------------------------------------------------
@@ -667,7 +666,7 @@ def main(argv):
 
         parser.add_argument('--version', action='version', version='%(prog)s 2.0')
 
-        parser.add_argument('-r','--root_dir',type=str,help='The root dir of your project.',default=os.getcwd())
+        parser.add_argument('-r','--root_dir',type=str,help='The root dir of your project (default : '+str(os.getcwd())+')',default=os.getcwd())
 
         parser.add_argument('project_name', type=str,nargs=1,help='The name of the main directory/namespace used in classes.')
 
@@ -688,10 +687,11 @@ def main(argv):
         print("")
         prettify(main_dict)
         print("")
-        if(yn_choice("Generate the project ?", 'y')):
-            fgen.write_files()
-        else:
-            print("Aborted")
+        #if(yn_choice("Generate the project ?", 'y')):
+        fgen.write_files()
+        print('Successfully created files in %s. Please adjust the values in package.xml.' % root_dir)
+        #else:
+        #    print("Aborted")
 
     else:
         ## Gui interface
