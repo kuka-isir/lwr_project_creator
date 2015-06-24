@@ -25,6 +25,7 @@ before_install:
   - cd ~/catkin_ws/src
   - catkin_init_workspace
   - ln -s $CI_SOURCE_PATH
+  - sudo apt-get install -y --reinstall python-catkin-pkg
 
 install:
   # build the normal catkin workspace
