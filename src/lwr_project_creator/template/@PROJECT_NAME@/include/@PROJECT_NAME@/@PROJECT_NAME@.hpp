@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public
 // License along with this library.
 
-#ifndef __@PROJECT_NAME@_HPP__
-#define __@PROJECT_NAME@_HPP__
+#ifndef __@PROJECT_NAME_UPPER@_HPP__
+#define __@PROJECT_NAME_UPPER@_HPP__
 
 #include "rtt_lwr_abstract/rtt_lwr_abstract.hpp"
 
@@ -26,8 +26,9 @@ namespace lwr{
       virtual ~@CLASS_NAME@(){};
       void updateHook();
       bool configureHook();
+      void setGain(double gain);
     protected:
-      double kp_;
+      double gain_;
   };
 }
 ORO_CREATE_COMPONENT(lwr::@CLASS_NAME@)
