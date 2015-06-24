@@ -1,5 +1,6 @@
 LWR Project Creator
 =====
+[![Build Status](https://travis-ci.org/kuka-isir/lwr_project_creator.svg?branch=master)](https://travis-ci.org/kuka-isir/lwr_project_creator)
 
 This simple tool generates a controller for the Kuka LWR4+ at ISIR.
 
