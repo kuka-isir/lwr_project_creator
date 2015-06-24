@@ -1,0 +1,27 @@
+language:
+  - python
+
+python:
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+
+before_install:
+  - export ROS_DISTRO=hydro
+  - export CI_SOURCE_PATH=$(pwd)
+  # Bootstrap a minimal ROS installation
+  - git clone https://github.com/jhu-lcsr/ros_ci_tools /tmp/ros_ci_tools && export PATH=/tmp/ros_ci_tools:$PATH
+  - ros_ci_bootstrap
+  - source /opt/ros/$ROS_DISTRO/setup.bash
+  - mkdir -p ~/ws/src
+  - pushd ~/ws/src
+  - ln -s $CI_SOURCE_PATH
+  - rosdep install -r --from-paths ~/ws/src --ignore-src --rosdistro $ROS_DISTRO -y > /dev/null
+
+install:
+  - pushd ~/ws
+  - catkin_make -j2
+script:
+  - source devel/setup.bash
+  - lwr_create_pkg test_demo
