@@ -4,4 +4,4 @@ ros.import("rtt_rospack")
 runScript(ros.find("lwr_fri")+"/runfridiag.ops")
 // Start @PROJECT_NAME@
 runScript(ros.find("@PROJECT_NAME@")+"/scripts/run_hw.ops")
-example.start()
+@CLASS_NAME@.start()

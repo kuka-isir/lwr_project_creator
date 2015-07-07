@@ -12,17 +12,17 @@ setActivity("scheme",0.001,LowestPriority,ORO_SCHED_RT)
 scheme.loadService("conman_ros")
 
 connectPeers("scheme","lwr_sim")
-connectPeers("scheme","example")
+connectPeers("scheme","@CLASS_NAME@")
 
 scheme.addBlock("lwr_sim")
-scheme.addBlock("example")
+scheme.addBlock("@CLASS_NAME@")
 
 
 scheme.addGroup("robots")
 scheme.addGroup("controllers")
 
 scheme.addToGroup("lwr_sim","robots")
-scheme.addToGroup("example","controllers")
+scheme.addToGroup("@CLASS_NAME@","controllers")
 
 scheme.latchConnections("robots","controllers",true);
 
@@ -31,6 +31,6 @@ scheme.configure()
 
 scheme.enableBlock("robots",true)
 
-scheme.enableBlock("example",true)
+scheme.enableBlock("@CLASS_NAME@",true)
 
 scheme.start()
