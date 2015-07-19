@@ -34,6 +34,7 @@ before_install:
   - source devel/setup.bash
   - cd ~/catkin_ws/src
   - ln -s $CI_SOURCE_PATH
+  - sudo apt-get install python-gtk2
 
 install:
   # build the normal catkin workspace
