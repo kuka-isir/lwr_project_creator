@@ -26,9 +26,9 @@ namespace lwr{
       virtual ~@CLASS_NAME@(){};
       void updateHook();
       bool configureHook();
-      void setGain(double gain);
+      void setDamping(const double damping);
     protected:
-      double gain_;
+      double damping_;
   };
 }
 ORO_CREATE_COMPONENT(lwr::@CLASS_NAME@)

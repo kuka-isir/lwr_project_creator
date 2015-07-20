@@ -2,26 +2,43 @@
 
 namespace lwr{
 
-@CLASS_NAME@::@CLASS_NAME@(const std::string& name):RTTLWRAbstract(name)
+@CLASS_NAME@::@CLASS_NAME@(const std::string& name):
+damping_(10.0),
+RTTLWRAbstract(name)
 {
-    this->addOperation("setGain",&@CLASS_NAME@::setGain,this,RTT::OwnThread);
+    this->addOperation("setDamping",&@CLASS_NAME@::setDamping,this,RTT::OwnThread);
 }
 
 bool @CLASS_NAME@::configureHook()
 {
+    // Configure kdl chains, connect all ports etc.
     bool configure = RTTLWRAbstract::configureHook();
-    setJointImpedanceControlMode();
+    
+    // This is joint imp ctrl + Kp=Kd=0
+    setJointTorqueControlMode();
+    
     return configure;
 }
 
-void @CLASS_NAME@::setGain(double gain)
+void @CLASS_NAME@::setDamping(const double damping)
 {
-    gain_ = gain;
+    if(damping)
+        damping_ = damping;
 }
 
 void @CLASS_NAME@::updateHook()
 {
-    //this->trigger();
+    // Get the latest state
+    if(!updateState())
+        return;
+    // Now jnt_pos, jnt_vel are filled with new data
+    
+    // Zero Grav + Damping
+    jnt_trq_cmd = -damping_*jnt_vel;
+    
+    // Checking if in the right control mode
+    if(isCommandMode() && isJointImpedanceControlMode())
+        sendJointTorque(jnt_trq_cmd);
 }
 
 }
