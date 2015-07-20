@@ -18,7 +18,7 @@
     
 <!--============ LWR Runner script Params ========-->
     
-    <!-- Reference link for the getCartesianPosition or GetJacobian -->
+    <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
     <arg name="tip_link" default="link_7"/>
     <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
     <arg name="sim" default="false" />
@@ -43,6 +43,7 @@
         <arg name="debug" value="$(arg debug)" />
         <arg name="rviz" value="$(arg rviz)" />
         <arg name="log_level" value="$(arg log_level)" />
+        <arg name="tip_link" default="$(arg tip_link)"/>
     </include>
 
 </launch>
