@@ -115,8 +115,7 @@ class ProcFile:
             print(e)
 
     def write(self):
-        if not self.__create_dir(self.dir_out):
-            return False
+        self.__create_dir(self.dir_out)
         self.__write_stream_to_file(self.f_out,self.f_out_path,overwrite=False)
 
     def remove_tmp_file(self):
@@ -220,8 +219,7 @@ class ProjGenerator():
 
     def write_files(self):
         for pfile in self.pfiles:
-            if not pfile.write():
-                return False
+            pfile.write()
         return True
 
     def __find_dirs_in_subdirectories(self, subdirectory=''):
