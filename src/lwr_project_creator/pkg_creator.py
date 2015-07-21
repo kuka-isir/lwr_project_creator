@@ -115,17 +115,18 @@ class ProcFile:
             print(e)
 
     def write(self):
-        self.__create_dir(self.dir_out)
+        if not self.__create_dir(self.dir_out):
+            return False
         self.__write_stream_to_file(self.f_out,self.f_out_path,overwrite=False)
-        
+
     def remove_tmp_file(self):
         try:
             if not os.path.isdir(self.tmp_file_out_path):
                 os.remove(self.tmp_file_out_path)
                 print(self.tmp_file_out_path,'deleted')
         except Exception as e:
-            print("Error while tying to remove ",self.tmp_file_out_path,e) 
-                
+            print("Error while tying to remove ",self.tmp_file_out_path,e)
+
     def __write_stream_to_file(self,stream_in,f_out_path,overwrite=False):
         if overwrite or (not overwrite and not os.path.isfile(f_out_path)):
             with open(f_out_path,'w') as f :
@@ -137,6 +138,9 @@ class ProcFile:
     def __create_dir(self,dir_out):
         if not os.path.isdir(dir_out):
             os.makedirs(dir_out)
+            return True
+        else:
+            return False
 
 class ProjGenerator():
     def __init__(self,root_path,project_name,classname,author=''):
@@ -157,9 +161,9 @@ class ProjGenerator():
             self.classname = [c]
         else:
             self.classname = [format_class_name(c) for c in classname]
-            
+
         self.author = author
-        
+
         self.root_path = self.__wo_backslash_path(root_path)
         self.filename = [self.__get_filename_from_classname(c) for c in self.classname]
         self.project_name = format_comp_name(project_name)
@@ -216,7 +220,9 @@ class ProjGenerator():
 
     def write_files(self):
         for pfile in self.pfiles:
-            pfile.write()
+            if not pfile.write():
+                return False
+        return True
 
     def __find_dirs_in_subdirectories(self, subdirectory=''):
         if subdirectory:
@@ -295,7 +301,7 @@ class LWRComponentAssistant(gtk.Assistant):
         self.set_title('LWR CMake Project Creator v'+__version__)
         self.connect('prepare', self.__prepare_page_cb)
         self.scrolled_window = None
-        
+
         self.connect('close', self.cb_close)
 
         self.connect("cancel", self.cb_close)
@@ -313,7 +319,7 @@ class LWRComponentAssistant(gtk.Assistant):
         self.set_default_size(400, 400)
 
         self.show()
-        
+
 
     def main(self):
         gtk.main()
@@ -537,13 +543,13 @@ class LWRComponentAssistant(gtk.Assistant):
                     self.__create_store(value,store,it_next)
                 else:
                     store.append(it_next,[str(key)])
-                    
+
     def clean_tmp_files(self):
         try:
             for pfile in self.fgen.pfiles:
                 pfile.remove_tmp_file()
         except: pass
-            
+
     def __on_row_activated(self, tview, index, user_data):
         assert isinstance(tview,gtk.TreeView)
         assert isinstance(user_data,gtk.TreeViewColumn)
@@ -646,6 +652,9 @@ def yn_choice(message, default='y'):
     values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
     return choice.strip().lower() in values
 
+def proj_exists(rel_path):
+    return os.path.isdir(os.getcwd()+"/"+rel_path)
+
 def main(argv):
     if len(argv)>1:
         ## Console interface
@@ -683,15 +692,18 @@ def main(argv):
         ## Print the files to be generated
         input_ = fgen.get_list_of_files_out()
         main_dict = create_dict_tree(input_)
-        print("Project to be generated")
-        print("")
-        prettify(main_dict)
-        print("")
-        #if(yn_choice("Generate the project ?", 'y')):
-        fgen.write_files()
-        print('Successfully created files in %s. Please adjust the values in package.xml.' % root_dir)
-        #else:
-        #    print("Aborted")
+
+        if not proj_exists(project_name):
+            print("Project to be generated")
+            print("")
+            prettify(main_dict)
+            print("")
+            #if(yn_choice("Generate the project ?", 'y')):
+            if fgen.write_files():
+                print('\nSuccessfully created files in %s. Please adjust the values in package.xml.' % root_dir)
+        else:
+            parser.print_usage()
+            print("lwr_create_pkg: error: File exists: "+os.getcwd()+project_name+"/CMakeLists.txt")
 
     else:
         ## Gui interface
