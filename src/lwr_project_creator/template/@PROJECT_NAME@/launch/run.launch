@@ -30,15 +30,25 @@
     <arg name="rviz" default="true" />
     <!-- The level of verbose (never, fatal, critical, error, warning, info, debug, realtime) -->
     <arg name="log_level" default="warning" />
+
+<!--============ @CLASS_NAME@ Params ============-->
+
+    <!-- Some parameter -->
+    <arg name="damping" default="8.0"/>
     
+    <!-- The parameters that the @CLASS_NAME@ sensor will get -->
+    <rosparam ns="@CLASS_NAME@" subst_value="true">
+        damping: $(arg damping)
+    </rosparam>
+
 <!--============ LWR Runner script ===============-->  
 
     <include file="$(find lwr_launch)/launch/run.launch">
         <arg name="sim" value="$(arg sim)" />
         <!-- Default ops script location for real robot -->
-        <arg name="ops_script" value="$(find rtt_lwr_cart_ctrl)/scripts/run_hw_standalone.ops" unless="$(arg sim)"/>
+        <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run_hw_standalone.ops" unless="$(arg sim)"/>
         <!-- Default ops script location for simulated robot -->
-        <arg name="ops_script" value="$(find rtt_lwr_cart_ctrl)/scripts/run_sim_standalone.ops" if="$(arg sim)"/>
+        <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run_sim_standalone.ops" if="$(arg sim)"/>
         <arg name="robot_ns" value="$(arg robot_ns)"/>
         <arg name="debug" value="$(arg debug)" />
         <arg name="rviz" value="$(arg rviz)" />
