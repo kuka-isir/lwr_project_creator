@@ -7,12 +7,16 @@ damping_(10.0),
 RTTLWRAbstract(name)
 {
     this->addOperation("setDamping",&@CLASS_NAME@::setDamping,this,RTT::OwnThread);
+    this->addProperty("damping",damping_).doc("Damping value");
 }
 
 bool @CLASS_NAME@::configureHook()
 {
     // Configure kdl chains, connect all ports etc.
     bool configure = RTTLWRAbstract::configureHook();
+    
+    // Try to get parameters from ROS
+    this->getAllComponentRelative();
     
     // This is joint imp ctrl + Kp=Kd=0
     setJointTorqueControlMode();
