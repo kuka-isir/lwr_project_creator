@@ -3,5 +3,4 @@ ros.import("@PROJECT_NAME@")
 loadComponent("@CLASS_NAME@","lwr::@CLASS_NAME@")
 setActivity("@CLASS_NAME@",0.001,LowestPriority,ORO_SCHED_RT)
 connectPeers("@CLASS_NAME@","lwr_sim")
-@CLASS_NAME@.robot_name = "lwr_sim"
 @CLASS_NAME@.configure()
