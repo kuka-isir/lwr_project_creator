@@ -13,7 +13,7 @@ RTTLWRAbstract(name)
 bool @CLASS_NAME@::configureHook()
 {
     // Configure kdl chains, connect all ports etc.
-    bool configure = RTTLWRAbstract::configureHook();
+    bool configure = RTTLWRAbstract::init();
     
     // Try to get parameters from ROS
     this->getAllComponentRelative();
