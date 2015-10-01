@@ -15,7 +15,7 @@ bool @CLASS_NAME@::configureHook()
     // Configure kdl chains, connect all ports etc.
     bool configure = RTTLWRAbstract::init();
     
-    // Try to get parameters from ROS
+    // Map parameters from ROS to OROCOS Properties
     this->getAllComponentRelative();
     
     // This is joint imp ctrl + Kp=Kd=0
