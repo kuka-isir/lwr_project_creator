@@ -4,11 +4,10 @@
 # Launch in Simulation
 
 ```bash
-# Start Gazebo simulation
-roslaunch rtt_lwr_gazebo lwr_gazebo.launch
-# Start your controller in simulation
+# Start Gazebo + your controller
 roslaunch @PROJECT_NAME@ run.launch sim:=true
 ```
+
 # Launch on Hardware
 
 ```bash
