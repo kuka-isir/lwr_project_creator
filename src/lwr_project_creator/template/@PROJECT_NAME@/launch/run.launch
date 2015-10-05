@@ -20,7 +20,7 @@
     
     <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
     <arg name="tip_link" default="link_7"/>
-    <!-- Run Simulated robot (need to 'roslaunch rtt_lwr_gazebo lwr_gazebo.launch' first) -->
+    <!-- Run Simulated robot -->
     <arg name="sim" default="false" />
     <!-- The global namespace if you need to change it (unlikely) -->
     <arg name="robot_ns" default="/"/>
