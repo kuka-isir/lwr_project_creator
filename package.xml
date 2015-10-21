@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>lwr_project_creator</name>
-  <version>1.0.0</version>
+  <version>1.4.0</version>
   <description>
     Simple project generator for the KUKA LWR4+ at ISIR
   </description>
