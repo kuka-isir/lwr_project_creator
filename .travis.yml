@@ -49,5 +49,6 @@ script:
   - source $CATKIN_WS/devel/setup.bash
   - cd $CATKIN_WS_SRC
   - lwr_create_pkg test_controller $CREATE_PKG_ARGS
+  - cd $CATKIN_WS
   - catkin_make
   
