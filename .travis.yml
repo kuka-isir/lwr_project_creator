@@ -1,46 +1,54 @@
 sudo: required
-
-language:
-  - cpp
-  - python
-  
+dist: trusty
+# Force travis to use its minimal image with default Python settings
+language: generic
 compiler:
-  - gcc 
+  - gcc
+env:
+  global:
+    - CATKIN_WS=~/catkin_ws
+    - CATKIN_WS_SRC=${CATKIN_WS}/src
+  matrix:
+    - CI_ROS_DISTRO="indigo"
+    - CI_ROS_DISTRO="jade"
+    - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS="-C AwesomeController"
+    - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS=""
+
+matrix:
+  allow_failures:
+    - env: CI_ROS_DISTRO="jade"
   
-python:
-  - "2.7"
-  - "3.2"
-  - "3.3"
-  - "3.4"
-
-before_install:
-  # Define some config vars
-  - export ROS_DISTRO=hydro
-  - export CI_SOURCE_PATH=$(pwd)
-  # Bootstrap a minimal ROS installation
-  - sudo sh -c "echo 'deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main' > /etc/apt/sources.list.d/ros-latest.list"
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update
-  - sudo apt-get install ros-$ROS_DISTRO-ros-base
-  - source /opt/ros/$ROS_DISTRO/setup.bash
-  - sudo -E rosdep init
-  - rosdep update
-  - sudo pip install -U catkin_pkg
-  - mkdir -p ~/catkin_ws/src
-  - cd ~/catkin_ws/src
-  - catkin_init_workspace
-  - cd ~/catkin_ws/
-  - catkin_make
-  - source devel/setup.bash
-  - cd ~/catkin_ws/src
-  - ln -s $CI_SOURCE_PATH
-  - sudo apt-get install python-gtk2
-
 install:
-  # build the normal catkin workspace
-  - cd ~/catkin_ws/
-  - catkin_make
-
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y python-rosdep python-catkin-tools
+  - sudo apt-get install -qq -y ros-$CI_ROS_DISTRO-catkin ros-$CI_ROS_DISTRO-ros
+  - sudo rosdep init
+  - rosdep update
+  - source /opt/ros/$CI_ROS_DISTRO/setup.bash
+  - mkdir -p $CATKIN_WS_SRC
+  - ln -s $TRAVIS_BUILD_DIR $CATKIN_WS_SRC
+  - cd $CATKIN_WS
+  - catkin init
+  - cd $CATKIN_WS_SRC
+  - git clone --recursive https://github.com/kuka-isir/rtt_lwr
+  - git clone https://github.com/ahoarau/rtt_gazebo
+  - git clone https://github.com/kuka-isir/rtt_ros_kdl_tools
+  - wget https://raw.githubusercontent.com/IDSCETHZurich/re_trajectory-generator/master/kuka_IK/include/friComm.h
+  - mv friComm.h $CATKIN_WS_SRC/rtt_lwr/lwr_hardware/kuka_lwr_fri/include/kuka_lwr_fri/friComm.h
+  - rosdep install -r --from-paths $CATKIN_WS_SRC/ --rosdistro $ROS_DISTRO -y
 script:
-  - source devel/setup.bash
-  - lwr_create_pkg test_demo
+  # Enable install space
+  #- catkin config --install
+  # Build [and Install] packages
+  - catkin build --limit-status-rate 0.1 --no-notify -j2 -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
+  # Build tests
+  #- catkin build --limit-status-rate 0.1 --no-notify --make-args tests
+  # Run tests
+  #- catkin run_tests
+  - source $CATKIN_WS/devel/setup.bash
+  - cd $CATKIN_WS_SRC
+  - lwr_create_pkg test_controller $CREATE_PKG_ARGS
+  - catkin build --limit-status-rate 0.1 --no-notify -j2 -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
+  
