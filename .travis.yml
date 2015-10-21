@@ -12,7 +12,6 @@ env:
     - CI_ROS_DISTRO="indigo"
     - CI_ROS_DISTRO="jade"
     - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS="-C AwesomeController"
-    - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS=""
 
 matrix:
   allow_failures:
@@ -50,5 +49,5 @@ script:
   - source $CATKIN_WS/devel/setup.bash
   - cd $CATKIN_WS_SRC
   - lwr_create_pkg test_controller $CREATE_PKG_ARGS
-  - catkin build --limit-status-rate 0.1 --no-notify -j2 -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Debug
+  - catkin_make
   
