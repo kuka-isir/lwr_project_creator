@@ -11,7 +11,7 @@ env:
   matrix:
     - CI_ROS_DISTRO="indigo"
     - CI_ROS_DISTRO="jade"
-    - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS="-C AwesomeController"
+    - CI_ROS_DISTRO="indigo" CREATE_PKG_ARGS="-c AwesomeController"
 
 matrix:
   allow_failures:
