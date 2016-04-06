@@ -19,17 +19,16 @@
 
 #include "rtt_lwr_abstract/rtt_lwr_abstract.hpp"
 
-namespace lwr{
-  class @CLASS_NAME@ : public RTTLWRAbstract{
+class @CLASS_NAME@ : public lwr::RTTLWRAbstract{
     public:
-      @CLASS_NAME@(const std::string& name);
-      virtual ~@CLASS_NAME@(){};
-      void updateHook();
-      bool configureHook();
-      void setDamping(const double damping);
+        @CLASS_NAME@(const std::string& name);
+        virtual ~@CLASS_NAME@(){};
+        void updateHook();
+        bool configureHook();
+        void setDamping(const double damping);
     protected:
-      double damping_;
-  };
-}
-ORO_CREATE_COMPONENT(lwr::@CLASS_NAME@)
+        double damping_;
+};
+
+ORO_CREATE_COMPONENT(@CLASS_NAME@)
 #endif

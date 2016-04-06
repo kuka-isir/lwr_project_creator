@@ -19,7 +19,7 @@ def attach(branch, trunk):
         if node not in trunk:
             trunk[node] = defaultdict(dict, ((FILE_MARKER, []),))
         attach(others, trunk[node])
-        
+
 def prettify(d, indent=0):
     '''
     Print the file tree structure with proper indentation.
@@ -34,7 +34,7 @@ def prettify(d, indent=0):
                 prettify(value, indent+1)
             else:
                 print('  ' * (indent+1) + str(value))
-                
+
 def format_comp_name(comp_name):
     s = comp_name.replace(' ', '')
     s = s.strip()
@@ -75,8 +75,8 @@ def yn_choice(message, default='y'):
 
 def proj_exists(rel_path):
     return os.path.isdir(os.getcwd()+"/"+rel_path)
-    
-    
+
+
 class ProcFile:
     '''
     This basic class deals with a single file in / file out. Can read/write, replace variables by text.
@@ -224,6 +224,9 @@ class ProjGenerator():
         self.template_elem_multi.append(['@CLASS_NAME@' ,self.get_class_name()])
         self.template_elem_multi.append(['@FILE_NAME@'   ,self.get_filename()])
         self.template_elem_multi.append(['@FILE_NAME_UPPER@',[fn.upper() for fn in self.get_filename()]])
+        self.template_elem_multi.append(['@FILE_NAME_LOWER@',[fn.lower() for fn in self.get_filename()]])
+        self.template_elem_multi.append(['@CLASS_NAME_UPPER@',[cl.upper() for cl in self.get_class_name()]])
+        self.template_elem_multi.append(['@CLASS_NAME_LOWER@',[cl.lower() for cl in self.get_class_name()]])
 
         ## Processing the multiple elements
         files_path_to_write=[]

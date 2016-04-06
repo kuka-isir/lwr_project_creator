@@ -1,6 +1,0 @@
-import("rtt_ros")
-ros.import("@PROJECT_NAME@")
-loadComponent("@CLASS_NAME@","lwr::@CLASS_NAME@")
-setActivity("@CLASS_NAME@",0.001,LowestPriority,ORO_SCHED_RT)
-connectPeers("@CLASS_NAME@","lwr")
-@CLASS_NAME@.configure()

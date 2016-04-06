@@ -4,23 +4,11 @@ project(@PROJECT_NAME@)
 find_package(catkin REQUIRED COMPONENTS
     rtt_ros
     kuka_lwr_fri
-    diagnostic_msgs
-    geometry_msgs
-    std_msgs
-    kdl_conversions
-    eigen_conversions
     cmake_modules
 )
 
 find_package(Eigen REQUIRED)
 find_package(orocos_kdl REQUIRED)
-find_package(Boost REQUIRED)
-
-catkin_package(
-  INCLUDE_DIRS include
-   DEPENDS rtt
-   CATKIN_DEPENDS rtt_ros diagnostic_msgs geometry_msgs std_msgs
-)
 
 include_directories(
     include
@@ -28,7 +16,6 @@ include_directories(
     ${Eigen_INCLUDE_DIRS}
     ${orocos_kdl_INCLUDE_DIRS}
     ${USE_OROCOS_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
 )
 
 orocos_component(${PROJECT_NAME} src/${PROJECT_NAME}.cpp)
@@ -38,9 +25,7 @@ target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${USE_OROCOS_LIBRARIES}
     ${orocos_kdl_LIBRARIES}
-    ${kdl_conversions_LIBRARIES}
-    ${Boost_LIBRARIES}
 )
 
-orocos_install_headers(DIRECTORY include/${PROJECT_NAME})
+orocos_install_headers(FILE include/${PROJECT_NAME}/@PROJECT_NAME@.hpp)
 orocos_generate_package(INCLUDE_DIRS include)

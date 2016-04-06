@@ -8,16 +8,16 @@
     <arg name="ft_calibration_index" default="-1"/>
     <!-- The name of the Wrench frame -->
     <arg name="ft_frame" default="/ati_link"/>
-    
+
     <!-- The parameters that the ft_component sensor will get -->
     <rosparam ns="ft_sensor" subst_value="true">
         ip: $(arg ft_ip)
         calibration_index: $(arg ft_calibration_index)
         frame: $(arg ft_frame)
     </rosparam>
-    
+
 <!--============ LWR Runner script Params ========-->
-    
+
     <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
     <arg name="tip_link" default="link_7"/>
     <!-- Run Simulated robot -->
@@ -43,20 +43,17 @@
 
     <!-- Some parameter -->
     <arg name="damping" default="8.0"/>
-    
+
     <!-- The parameters that the @CLASS_NAME@ sensor will get -->
     <rosparam ns="@CLASS_NAME@" subst_value="true">
         damping: $(arg damping)
     </rosparam>
 
-<!--============ LWR Runner script ===============-->  
+<!--============ LWR Runner script ===============-->
 
-    <include file="$(find lwr_launch)/launch/run.launch">
+    <include file="$(find lwr_utils)/launch/run.launch">
         <arg name="sim" value="$(arg sim)" />
-        <!-- Default ops script location for real robot -->
-        <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run_hw_standalone.ops" unless="$(arg sim)"/>
-        <!-- Default ops script location for simulated robot -->
-        <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run_sim_standalone.ops" if="$(arg sim)"/>
+        <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run.ops"/>
         <arg name="robot_ns" value="$(arg robot_ns)"/>
         <arg name="debug" value="$(arg debug)" />
         <arg name="rviz" value="$(arg rviz)" />
@@ -71,4 +68,3 @@
     </include>
 
 </launch>
-

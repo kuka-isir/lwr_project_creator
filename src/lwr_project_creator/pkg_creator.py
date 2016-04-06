@@ -54,7 +54,7 @@ def main(argv):
                 print('\nSuccessfully created files in %s. Please adjust the values in package.xml.' % root_dir)
         else:
             parser.print_usage()
-            print("lwr_create_pkg: error: File exists: "+os.getcwd()+project_name+"/CMakeLists.txt")
+            print("lwr_create_pkg: error: File exists: "+os.getcwd()+'/'+project_name+"/CMakeLists.txt")
 
     else:
         import pkg_creator_gui as gui

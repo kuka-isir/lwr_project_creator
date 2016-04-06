@@ -1,0 +1,22 @@
+import("rtt_rospack")
+runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
+
+loadRobot(true)
+loadStatePublisher(true)
+
+# Load and start the controller
+import("rtt_ros")
+ros.import("@PROJECT_NAME@")
+
+loadComponent("@PROJECT_NAME@","@CLASS_NAME@")
+setActivity("@PROJECT_NAME@",0.001,LowestPriority,ORO_SCHED_RT)
+
+connectPeers("@PROJECT_NAME@",getRobotName())
+
+configureComponent("@PROJECT_NAME@")
+
+connectAllPorts(getRobotName(),"@PROJECT_NAME@")
+
+startComponent("@PROJECT_NAME@")
+
+setJointImpedanceControlMode()
