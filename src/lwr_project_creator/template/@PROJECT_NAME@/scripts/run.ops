@@ -1,7 +1,7 @@
 import("rtt_rospack")
 runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
 
-loadRobot(true)
+loadRobot(getRobotName(),isSim(),true)
 loadStatePublisher(true)
 
 # Load and start the controller
