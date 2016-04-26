@@ -19,6 +19,7 @@
 
   <run_depend>rtt</run_depend>
   <run_depend>rtt_ros</run_depend>
+  <run_depend>rtt_rosparam</run_depend>
   <run_depend>rtt_lwr_abstract</run_depend>
   <run_depend>rtt_ros_kdl_tools</run_depend>
   <run_depend>lwr_utils</run_depend>
@@ -26,7 +27,7 @@
 
   <export>
     <rtt_ros>
-      <plugin_depend>lwr_utils</plugin_depend>
+      <plugin_depend>rtt_rosparam</plugin_depend>
     </rtt_ros>
   </export>
 </package>
