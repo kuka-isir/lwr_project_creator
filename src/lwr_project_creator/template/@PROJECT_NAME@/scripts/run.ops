@@ -1,11 +1,16 @@
 import("rtt_rospack")
 runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
 
+# Load the robot (<name>, <is sim> ,<start component>)
 loadRobot(getRobotName(),isSim(),true)
+
+# Start the state publisher (<start component>)
 loadStatePublisher(true)
 
 # Load and start the controller
 import("rtt_ros")
+
+# This will load all the dependencies in packages.xml <export><rtt_ros>
 ros.import("@PROJECT_NAME@")
 
 loadComponent("@PROJECT_NAME@","@CLASS_NAME@")
@@ -15,7 +20,8 @@ connectPeers("@PROJECT_NAME@",getRobotName())
 
 configureComponent("@PROJECT_NAME@")
 
-connectAllPorts(getRobotName(),"@PROJECT_NAME@")
+# Connects corresponding ports from your controller to the robot component
+connectAllPorts(getRobotName(),"@PROJECT_NAME@",ConnPolicy())
 
 startComponent("@PROJECT_NAME@")
 

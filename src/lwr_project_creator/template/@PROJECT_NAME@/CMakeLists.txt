@@ -3,7 +3,7 @@ project(@PROJECT_NAME@)
 
 find_package(catkin REQUIRED COMPONENTS
     rtt_ros
-    kuka_lwr_fri
+    rtt_ros_kdl_tools
     cmake_modules
 )
 
@@ -27,5 +27,5 @@ target_link_libraries(${PROJECT_NAME}
     ${orocos_kdl_LIBRARIES}
 )
 
-orocos_install_headers(FILE include/${PROJECT_NAME}/@PROJECT_NAME@.hpp)
+orocos_install_headers(DIRECTORY include/${PROJECT_NAME})
 orocos_generate_package(INCLUDE_DIRS include)
