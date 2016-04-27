@@ -1,29 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <launch>
-<!--============ ATI F/T Sensor Params ============-->
-
-    <!-- The ATI Sensor default ip -->
-    <arg name="ft_ip" default="192.168.100.103"/>
-    <!-- The ATI Sensor calibration index (-1 is 'use default') -->
-    <arg name="ft_calibration_index" default="-1"/>
-    <!-- The name of the Wrench frame -->
-    <arg name="ft_frame" default="/ati_link"/>
-
-    <!-- The parameters that the ft_component sensor will get -->
-    <rosparam ns="ft_sensor" subst_value="true">
-        ip: $(arg ft_ip)
-        calibration_index: $(arg ft_calibration_index)
-        frame: $(arg ft_frame)
-    </rosparam>
-
-<!--============ LWR Runner script Params ========-->
+<!--============ Runner script Params ========-->
 
     <!-- The end effector frame (you'll be able to use frames <= tip_link for cartesian position, jacobians etc.) -->
     <arg name="tip_link" default="ati_link"/>
     <!-- Run Simulated robot -->
     <arg name="sim" default="false" />
-    <!-- The global namespace if you need to change it (unlikely) -->
-    <arg name="robot_ns" default="/"/>
     <!-- Run in GDB -->
     <arg name="debug" default="false" />
     <!-- Launch rviz -->
@@ -37,23 +19,22 @@
 
     <!-- Gazebo -->
     <arg name="gazebo_gui" default="true"/>
-    <arg name="launch_gazebo" default="true"/>
 <!--============ @CLASS_NAME@ Params ============-->
 
-    <!-- Some parameter -->
-    <arg name="damping" default="8.0"/>
+    <!-- Set some parameters for @CLASS_NAME@
+    You can get them using rtt_ros_kdl_tools::getAllPropertiesFromROSParam(this)
+    in your component's configureHook() -->
 
-    <!-- The parameters that the @CLASS_NAME@ sensor will get -->
-    <rosparam ns="@CLASS_NAME@" subst_value="true">
-        damping: $(arg damping)
-    </rosparam>
+    <!--rosparam ns="@CLASS_NAME@" subst_value="true">
+        damping: 1.0
+        max_vels: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+    </rosparam-->
 
-<!--============ LWR Runner script ===============-->
+<!--============ Runner script ===============-->
 
     <include file="$(find lwr_utils)/launch/run.launch">
         <arg name="sim" value="$(arg sim)" />
         <arg name="ops_script" value="$(find @PROJECT_NAME@)/scripts/run.ops"/>
-        <arg name="robot_ns" value="$(arg robot_ns)"/>
         <arg name="debug" value="$(arg debug)" />
         <arg name="rviz" value="$(arg rviz)" />
         <arg name="log_level" value="$(arg log_level)" />
@@ -62,7 +43,6 @@
         <arg name="load_ati_sensor" value="$(arg load_ati_sensor)" />
         <arg name="load_handle" value="$(arg load_handle)" />
         <arg name="gazebo_gui" value="$(arg gazebo_gui)"/>
-        <arg name="launch_gazebo" value="$(arg launch_gazebo)"/>
     </include>
 
 </launch>
