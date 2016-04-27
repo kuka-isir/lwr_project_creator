@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Antoine Hoarau <hoarau.robotics@gmail.com>
-__version__="1.4.0"
+__version__="2.0.0"
 
 from pkg_creator_tools import *
 import gtk, gobject
@@ -9,7 +9,7 @@ class LWRComponentAssistant(gtk.Assistant):
     def __init__(self):
         self.fgen = None
         gtk.Assistant.__init__(self)
-        self.set_title('LWR CMake Project Creator v'+__version__)
+        self.set_title('Controller Package Creator v'+__version__)
         self.connect('prepare', self.__prepare_page_cb)
         self.scrolled_window = None
 
@@ -51,7 +51,7 @@ class LWRComponentAssistant(gtk.Assistant):
         vbox = gtk.VBox(False, 4)
         vbox.set_border_width(4)
 
-        label = gtk.Label("\nThis assistant will help you generate a new LWR project using the new CMake integration.\nIn the following page, you will get to specify the components that you need to create.\n")
+        label = gtk.Label("\nThis assistant will help you generate a simple controller for OROCOS/ROS.\n")
         label.set_line_wrap(True)
         vbox.pack_start(label, True, True, 0)
 
@@ -70,7 +70,7 @@ class LWRComponentAssistant(gtk.Assistant):
         label = gtk.Label("Project Name :")
         table.attach(label, 0, 1, 1, 2)
         self.entry = gtk.Entry()
-        self.entry.set_text("rtt_lwr_demo")
+        self.entry.set_text("controller_demo")
         table.attach(self.entry, 1, 2, 1, 2)
         self.entry.connect('changed', self.changed_comp_name_cb)
 
@@ -87,7 +87,7 @@ class LWRComponentAssistant(gtk.Assistant):
         vbox.show_all()
 
         self.append_page(vbox)
-        self.set_page_title(vbox, 'LWR CMake Project Creator')
+        self.set_page_title(vbox, 'Controller Package Creator')
         self.set_page_type(vbox, gtk.ASSISTANT_PAGE_CONTENT)
 
         self.set_page_complete(vbox, True)
@@ -105,7 +105,9 @@ class LWRComponentAssistant(gtk.Assistant):
     def edited_class_name_cb(self, cell, path, new_text, model ):
         model[path][0] = format_class_name(new_text)
         return
-
+    def edited_parent_class(self, cell, path, new_text, model ):
+        model[path][1] = format_class_name(new_text)
+        return
     def prio_edited_cb(self, renderer, path, new_text):
         itr = self.store.get_iter( path )
         self.store.set_value( itr, 1, new_text )
@@ -122,7 +124,7 @@ class LWRComponentAssistant(gtk.Assistant):
         model.set(iter, 2, toggle_item)
 
     def add_button_cb(self, widget):
-        self.store.append(('Controller%d'%self.component_count, "public RTTLWRAbstract"))
+        self.store.append(('Controller%d'%self.component_count, "public RTT::TaskContext"))
         self.component_count += 1
 
     def delete_button_cb(self, widget):
@@ -145,13 +147,14 @@ class LWRComponentAssistant(gtk.Assistant):
         hbbox.set_layout(gtk.BUTTONBOX_END)
         hbbox.set_spacing(4)
 
-        add_button = gtk.Button(stock=gtk.STOCK_ADD)
-        add_button.connect('clicked', self.add_button_cb)
-        delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
-        delete_button.connect('clicked', self.delete_button_cb)
+        # We only support 1 controller 
+        # add_button = gtk.Button(stock=gtk.STOCK_ADD)
+        # add_button.connect('clicked', self.add_button_cb)
+        # delete_button = gtk.Button(stock=gtk.STOCK_DELETE)
+        # delete_button.connect('clicked', self.delete_button_cb)
 
-        hbbox.add(add_button)
-        hbbox.add(delete_button)
+        # hbbox.add(add_button)
+        # hbbox.add(delete_button)
 
         vbox.pack_end(hbbox, False, False, 0)
 
@@ -162,7 +165,7 @@ class LWRComponentAssistant(gtk.Assistant):
 
         # Create the model
         self.store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        self.store.append(('ControllerTest', "public RTTLWRAbstract"))
+        self.store.append(('ControllerTest', "RTT::TaskContext"))
 
         # Create treeview
         self.treeview = gtk.TreeView(self.store)
@@ -173,8 +176,8 @@ class LWRComponentAssistant(gtk.Assistant):
         self.cellrenderer_name.connect('edited', self.edited_class_name_cb,self.store)
 
         self.cellrenderer_prio = gtk.CellRendererText()
-        self.cellrenderer_prio.set_property('editable', False)
-        #self.cellrenderer_prio.connect('edited', self.on_float_edited)
+        self.cellrenderer_prio.set_property('editable', True)
+        self.cellrenderer_prio.connect('edited', self.edited_parent_class,self.store)
 
         #self.cellrenderer_ec = gtk.CellRendererToggle()
         #self.cellrenderer_ec.set_property('activatable', True)
@@ -324,4 +327,3 @@ class LWRComponentAssistant(gtk.Assistant):
     def cb_apply(self, widget):
         self.fgen.write_files()
         return
-

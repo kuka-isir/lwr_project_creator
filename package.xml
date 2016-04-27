@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <package>
   <name>lwr_project_creator</name>
-  <version>1.4.0</version>
+  <version>2.0.0</version>
   <description>
-    Simple project generator for the KUKA LWR4+ at ISIR
+    Simple controller package creator to hepl you start faster on the Kuka LWR
   </description>
 
   <maintainer email="hoarau.robotics@gmail.com">Antoine Hoarau</maintainer>

@@ -1,39 +1,57 @@
 #include "@PROJECT_NAME@/@PROJECT_NAME@.hpp"
 
 @CLASS_NAME@::@CLASS_NAME@(const std::string& name):
-damping_(1.0),
-RTTLWRAbstract(name)
+RTT::TaskContext(name)
 {
-    this->addOperation("setDamping",&@CLASS_NAME@::setDamping,this,RTT::OwnThread);
-    this->addProperty("damping",damping_).doc("Damping value");
+    // Here you can add your ports, properties and operations
+    // Meanwhile, GenericArmController initialize the Arm() object, i.e. your model
+    // and sets
+    // and GenericController add the basic orocos ports
+    this->addPort("JointPosition",port_joint_position_in).doc("Current joint positions");
+    this->addPort("JointVelocity",port_joint_position_in).doc("Current joint velocities");
+    this->addPort("JointTorque",port_joint_position_in).doc("Current joint torques");
+
+    this->addPort("JointPositionCommand",port_joint_position_cmd_out).doc("Command joint positions");
+    this->addPort("JointVelocityCommand",port_joint_velocity_cmd_out).doc("Command joint velocities");
+    this->addPort("JointTorqueCommand",port_joint_torque_cmd_out).doc("Command joint torques");
+
 }
 
 bool @CLASS_NAME@::configureHook()
 {
-    // Configure kdl chains
-    bool configure = RTTLWRAbstract::init();
+    if(!this->arm.init())
+    {
+        RTT::log(RTT::Fatal)
+        << "Could not initialize arm, make sure roscore is launched"
+        " as well as tip_link, root_link and robot_description"
+        << RTT::endlog();
+    }
 
-    // Map parameters from ROS to OROCOS Properties
-    rtt_ros_kdl_tools::getAllPropertiesFromROSParam(this);
+    jnt_pos_in.setZero(arm.getNrOfJoints());
+    jnt_vel_in.setZero(arm.getNrOfJoints());
+    jnt_trq_in.setZero(arm.getNrOfJoints());
 
-    return configure;
-}
+    jnt_pos_cmd_out.setZero(arm.getNrOfJoints());
+    jnt_vel_cmd_out.setZero(arm.getNrOfJoints());
+    jnt_trq_cmd_out.setZero(arm.getNrOfJoints());
 
-void @CLASS_NAME@::setDamping(const double damping)
-{
-    if(damping)
-        damping_ = damping;
+    port_joint_position_cmd_out.setDataSample(jnt_pos_cmd_out);
+    port_joint_velocity_cmd_out.setDataSample(jnt_vel_cmd_out);
+    port_joint_torque_cmd_out.setDataSample(jnt_trq_cmd_out);
+
+    return true;
 }
 
 void @CLASS_NAME@::updateHook()
 {
-    // Get the latest state
-    getJointPosition(jnt_pos);
-    getJointVelocity(jnt_vel);
-    // Now jnt_pos, jnt_vel are filled with new data
+    // Read status from robot
+    port_joint_position_in.read(jnt_pos_in);
+    port_joint_velocity_in.read(jnt_vel_in);
 
-    // Zero Grav + Damping
-    jnt_trq_cmd = -damping_*jnt_vel;
+    // Update Internal model
+    this->arm.setState(jnt_pos_in,jnt_vel_in);
 
-    sendJointTorque(jnt_trq_cmd);
 }
+
+// Let orocos know how to create the component
+ORO_CREATE_COMPONENT(@CLASS_NAME@)

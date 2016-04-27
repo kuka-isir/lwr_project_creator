@@ -3,7 +3,6 @@ project(@PROJECT_NAME@)
 
 find_package(catkin REQUIRED COMPONENTS
     rtt_ros
-    rtt_ros_kdl_tools
     cmake_modules
 )
 
