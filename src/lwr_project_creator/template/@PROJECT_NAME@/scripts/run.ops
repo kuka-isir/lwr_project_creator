@@ -1,4 +1,5 @@
 import("rtt_rospack")
+# The magic utility script
 runScript(ros.find("lwr_utils")+"/scripts/utils.ops")
 
 # Load the robot (<name>, <is sim> ,<start component>)
@@ -21,8 +22,8 @@ connectPeers("@PROJECT_NAME@",getRobotName())
 configureComponent("@PROJECT_NAME@")
 
 # Connects corresponding ports from your controller to the robot component
-connectAllPorts(getRobotName(),"@PROJECT_NAME@",ConnPolicy())
+connectStandardPorts(getRobotName(),"@PROJECT_NAME@",ConnPolicy())
 
 startComponent("@PROJECT_NAME@")
 
-setJointImpedanceControlMode()
+print.ln("\n\n\x1B[32mYou can change the robot control modes using the krl_tool\x1B[0m\n")
