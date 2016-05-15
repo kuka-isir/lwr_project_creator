@@ -8,8 +8,8 @@ RTT::TaskContext(name)
     // and sets
     // and GenericController add the basic orocos ports
     this->addPort("JointPosition",port_joint_position_in).doc("Current joint positions");
-    this->addPort("JointVelocity",port_joint_position_in).doc("Current joint velocities");
-    this->addPort("JointTorque",port_joint_position_in).doc("Current joint torques");
+    this->addPort("JointVelocity",port_joint_velocity_in).doc("Current joint velocities");
+    this->addPort("JointTorque",port_joint_torque_in).doc("Current joint torques");
 
     this->addPort("JointPositionCommand",port_joint_position_cmd_out).doc("Command joint positions");
     this->addPort("JointVelocityCommand",port_joint_velocity_cmd_out).doc("Command joint velocities");
