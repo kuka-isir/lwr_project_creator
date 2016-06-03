@@ -18,7 +18,7 @@
     <arg name="load_handle" default="true" />
 
     <!-- Gazebo -->
-    <arg name="gazebo_gui" default="true"/>
+    <arg name="gazebo_gui" default="$(arg sim)"/>
 <!--============ @CLASS_NAME@ Params ============-->
 
     <!-- Set some parameters for @CLASS_NAME@
