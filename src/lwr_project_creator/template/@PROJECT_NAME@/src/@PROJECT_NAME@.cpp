@@ -50,6 +50,9 @@ void @CLASS_NAME@::updateHook()
 
     // Update Internal model
     this->arm.setState(jnt_pos_in,jnt_vel_in);
+    this->arm.updateModel(); // Computes fk, jacobian etc.
+    
+    this->arm.getJacobian();
 
 }
 
