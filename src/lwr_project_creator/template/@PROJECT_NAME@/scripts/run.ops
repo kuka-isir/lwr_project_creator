@@ -27,3 +27,10 @@ connectStandardPorts(getRobotName(),"@PROJECT_NAME@",ConnPolicy())
 startComponent("@PROJECT_NAME@")
 
 print.ln("\n\n\x1B[32mYou can change the robot control modes using the krl_tool\x1B[0m\n")
+
+# On the real robot, you have to set the mode manually
+# In simulation, JointImpedance is selected by default at the end of the loadRobot()
+
+#setJointImpedanceControlMode()
+#setJointTorqueControlMode()
+#setJointPositionControlMode()
