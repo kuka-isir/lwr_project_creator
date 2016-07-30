@@ -26,5 +26,6 @@ target_link_libraries(${PROJECT_NAME}
     ${orocos_kdl_LIBRARIES}
 )
 
-orocos_install_headers(DIRECTORY include/${PROJECT_NAME})
+file(GLOB headers include/${PROJECT_NAME}/*.h include/${PROJECT_NAME}/*.hpp )
+orocos_install_headers( FILES ${headers} )
 orocos_generate_package(INCLUDE_DIRS include)
