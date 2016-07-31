@@ -29,3 +29,12 @@ target_link_libraries(${PROJECT_NAME}
 file(GLOB headers include/${PROJECT_NAME}/*.h include/${PROJECT_NAME}/*.hpp )
 orocos_install_headers( FILES ${headers} )
 orocos_generate_package(INCLUDE_DIRS include)
+
+install(DIRECTORY scripts/
+ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/scripts
+ PATTERN ".svn" EXCLUDE)
+ 
+install(DIRECTORY launch/
+ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+ PATTERN ".svn" EXCLUDE)
+
