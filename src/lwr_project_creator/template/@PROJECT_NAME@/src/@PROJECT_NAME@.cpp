@@ -4,9 +4,7 @@
 RTT::TaskContext(name)
 {
     // Here you can add your ports, properties and operations
-    // Meanwhile, GenericArmController initialize the Arm() object, i.e. your model
-    // and sets
-    // and GenericController add the basic orocos ports
+    // ex : this->addOperation("my_super_function",&@CLASS_NAME@::MyFunction,this,RTT::OwnThread);
     this->addPort("JointPosition",port_joint_position_in).doc("Current joint positions");
     this->addPort("JointVelocity",port_joint_velocity_in).doc("Current joint velocities");
     this->addPort("JointTorque",port_joint_torque_in).doc("Current joint torques");
@@ -19,11 +17,12 @@ RTT::TaskContext(name)
 
 bool @CLASS_NAME@::configureHook()
 {
+    // Initialize the arm object
     if(!this->arm.init())
     {
         RTT::log(RTT::Fatal)
         << "Could not initialize arm, make sure roscore is launched"
-        " as well as tip_link, root_link and robot_description"
+        " and that tip_link, root_link and robot_description are set in rosparam"
         << RTT::endlog();
     }
 
@@ -51,7 +50,7 @@ void @CLASS_NAME@::updateHook()
     // Update Internal model
     this->arm.setState(jnt_pos_in,jnt_vel_in);
     this->arm.updateModel(); // Computes fk, jacobian etc.
-    
+    // Get Jacobian in Base
     this->arm.getJacobian();
 
 }
