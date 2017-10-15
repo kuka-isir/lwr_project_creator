@@ -18,10 +18,10 @@ def main(argv):
         |                                                                          |
         | example : lwr_create_pkg rtt_lwr_jt_controller -c JTController           |
         |                                                                          |
-        | Author : Antoine Hoarau <hoarau.robotics@gmail.com                       |
+        | Author : Antoine Hoarau <hoarau.robotics@gmail.com>                      |
         ----------------------------------------------------------------------------
 
-        """),epilog='Maintainer: Antoine Hoarau <hoarau.robotics AT gmail DOT com>')
+        """),epilog='Maintainer: Antoine Hoarau <hoarau.robotics@gmail.com>')
 
 
         parser.add_argument('--version', action='version', version='%(prog)s 2.0')
@@ -39,7 +39,10 @@ def main(argv):
         root_dir = args.root_dir
         author=args.author
         class_name = args.class_name
-        fgen=ProjGenerator(root_dir,project_name,class_name,author)
+        
+        template_dir = 'template'
+            
+        fgen=ProjGenerator(root_dir,project_name,class_name,author,template_dir)
         ## Print the files to be generated
         input_ = fgen.get_list_of_files_out()
         main_dict = create_dict_tree(input_)

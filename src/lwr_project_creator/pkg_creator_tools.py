@@ -181,16 +181,15 @@ class ProcFile:
             return False
 
 class ProjGenerator():
-    def __init__(self,root_path,project_name,classname,author=''):
+    def __init__(self,root_path,project_name,classname,author='',template_dir='template'):
         assert isinstance(root_path,str)
         assert isinstance(project_name,str)
         assert isinstance(author,str)
         assert os.path.isdir(root_path)
 
-
-        self.template_dir = 'template'
+        self.template_dir = template_dir
         self.template_extension = ''
-
+        
         self.pfiles=[]
 
         if not classname:
