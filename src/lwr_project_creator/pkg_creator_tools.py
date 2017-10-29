@@ -205,7 +205,8 @@ class ProjGenerator():
         self.filename = [self.__get_filename_from_classname(c) for c in self.classname]
         self.project_name = format_comp_name(project_name)
 
-        files_path_to_open = self.__get_file_tree_raw()
+        all_files_path_to_open = self.__get_file_tree_raw()
+        files_path_to_open = [s for s in all_files_path_to_open if "CATKIN_IGNORE" not in s]
         files_path_to_open_abs = [f.split(self.template_dir)[1] for f in files_path_to_open]
         files_path_to_write_raw = [self.root_path+f.replace(self.template_extension,'') for f in files_path_to_open_abs]
 
